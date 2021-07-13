@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import MovieCard from "../components/MovieCard";
 
 const FEATURED_API =
   "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=04c35731a5ee918f014970082a0088b1&page=1";
@@ -21,15 +22,20 @@ const Main = () => {
       .then((res) => setMovies(res.results));
   };
 
-  if (searchTerm) {
-    getMovies(SEARCH_API + searchTerm);
-  }
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    if (searchTerm) {
+      getMovies(SEARCH_API + searchTerm);
+      setSearchTerm("");
+    }
+  };
 
   return (
     <>
-      <form>
+      <form onSubmit={handleSearch}>
         <input
-          type="search-input"
+          type="search"
           className="search-input"
           placeholder="Search a movie..."
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -37,7 +43,7 @@ const Main = () => {
       </form>
       <div className="movie-container">
         {movies.map((movie) => (
-          <p>{movie.original_title}</p>
+          <MovieCard {...movie} />
         ))}
       </div>
     </>
